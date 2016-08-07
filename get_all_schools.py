@@ -16,7 +16,7 @@ def get_city_list():
     return city_list
     
 def get_city_id(name):
-    lst = get_school_list()
+    lst = get_city_list()
     for item in lst:
         if item['city'] == name:
             return item['cityid']
