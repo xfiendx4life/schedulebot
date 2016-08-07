@@ -8,12 +8,24 @@ from telebot import types
 import random
 import os
 import sqlite3
+from get_all_schools import *
+from db_processing import *
 
 bot = telebot.TeleBot(config.token)
 day = ''
 set_school = False
-conn = sqlite3.connect('schools.db')
-c = conn.cursor()
+chat_id = ''
+
+
+
+    
+@bot.message_handler(commands=['tomorrow'])
+def handle_tomorrow(message):
+    markup = types.ForceReply(selective=False)
+    bot.send_message(message.chat.id, 'Введите класс', reply_markup=markup)
+    global day
+    day = 'tomorrow'
+    print('tomorrow')
 
 
 @bot.message_handler(commands=['set_school'])
@@ -23,15 +35,7 @@ def handle_set_school(message):
     global set_school
     set_school = True
     #bot.send_message(message.chat.id, 'Got it!')
-
-@bot.message_handler(commands=['tomorrow'])
-def handle_tomorrow(message):
-    markup = types.ForceReply(selective=False)
-    bot.send_message(message.chat.id, 'Введите класс', reply_markup=markup)
-    global day
-    day = 'tomorrow'
-    print('tomorrow')
-    
+   
 @bot.message_handler(regexp="[А-Яа-я\s]*\/[А-Яа-я\s\№\d\"]*")
 def handle_city_school(message):
     global set_school
@@ -40,8 +44,10 @@ def handle_city_school(message):
     text = message.text.split('/')
     city_name = text[0]
     school_name = text[1]
-    bot.send_message(message.chat.id,school_name)
-
+    sc_id = get_school_id(city_name, school_name )
+    bot.send_message(message.chat.id,sc_id) 
+    db_update(message.chat.id, sc_id)
+    print(message.chat.id)
     set_school = False
     
 @bot.message_handler(commands=['start'])

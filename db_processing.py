@@ -10,7 +10,7 @@ def db_update(chat_id, sc_id):
     c = conn.cursor()
     c.execute('SELECT school_id FROM schools WHERE chat_id = %s' % chat_id)
     if c.fetchone():
-        c.execute('UPDATE schools SET school_id=%s' % sc_id)
+        c.execute('UPDATE schools SET school_id=%s WHERE chat_id=%s' % (sc_id, chat_id))
     else:
         c.execute('INSERT INTO schools VALUES (%s, %s)' % (chat_id, sc_id))
     conn.commit()
