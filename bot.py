@@ -7,11 +7,33 @@ import threading
 from telebot import types
 import random
 import os
+import sqlite3
 
 bot = telebot.TeleBot(config.token)
 day = ''
+set_school = False
+conn = sqlite3.connect('schools.db')
+c = conn.cursor()
 
 
+@bot.message_handler(commands=['set_school'])
+def handle_set_school(message):
+    markup = types.ForceReply(selective=False)
+    bot.send_message(message.chat.id, 'Введите город/назание школы', reply_markup=markup)
+    global set_school
+    set_school = True
+    #bot.send_message(message.chat.id, 'Got it!')
+    
+@bot.message_handler(regexp="[А-Яа-я\s]*\/[А-Яа-я\s\№\d\"]*")
+def handle_city_school(message):
+    global set_school
+    if not set_school:
+        return None
+    text = message.text.split('/')
+    city_name = text[0]
+    school_name = text[1]
+    bot.send_message(message.chat.id,school_name)
+    
 @bot.message_handler(commands=['start'])
 def handle_start(message):
     bot.send_message(message.chat.id, 'Приветствую, введите класс для получения расписания')
@@ -23,7 +45,7 @@ def handle_tomorrow(message):
     global day
     day = 'tomorrow'
 
-@bot.message_handler(regexp="[\d]+[а-гА-г]")
+@bot.message_handler(regexp="[\d]+[а-яА-Я]")
 def handle_test(message):
     print(message.text)
     global day
@@ -45,14 +67,14 @@ def handle_test(message):
     day = ''
 
 
-@bot.message_handler(func=lambda message: True)
+'''@bot.message_handler(func=lambda message: True)
 def handle_no_class(message):
     #print(message.text)
     bot.send_message(message.chat.id,'В нашей школе нет такого класса')
     sticker_number = random.randint(1,10)
     sti = open('stickers/%s.webp' % str(sticker_number), 'rb')
     bot.send_sticker(message.chat.id, sti)
-    #bot.send_sticker(message.chat.id, "FILEID")
+    #bot.send_sticker(message.chat.id, "FILEID")'''
 
 
         #time.sleep(3)
