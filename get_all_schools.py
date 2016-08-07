@@ -32,4 +32,8 @@ def get_school_list(cityid):
         school_list.append(school_dict)
     return school_list
 
-
+def get_school_id(city_name, school_name):
+    lst = get_school_list(get_city_id(city_name))
+    for item in lst:
+        if item['schoolname'] == school_name:
+            return item['schoolid']
