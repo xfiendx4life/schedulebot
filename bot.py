@@ -11,11 +11,17 @@ import sqlite3
 from get_all_schools import *
 from db_processing import *
 
+
+'''import logging
+
+logger = telebot.logger
+telebot.logger.setLevel(logging.DEBUG)'''
+
 bot = telebot.TeleBot(config.token)
 day = ''
 set_school = False
 chat_id = ''
-
+g_school_name = ''
 
 
     
@@ -44,10 +50,14 @@ def handle_city_school(message):
     text = message.text.split('/')
     city_name = text[0]
     school_name = text[1]
+
+    global g_school_name
+    g_school_name = message.text
+    
     sc_id = get_school_id(city_name, school_name )
     bot.send_message(message.chat.id,sc_id) 
     db_update(message.chat.id, sc_id)
-    print(message.chat.id)
+    #print("CHAT ID = " + message.chat.id)
     set_school = False
     
 @bot.message_handler(commands=['start'])
@@ -58,40 +68,49 @@ def handle_start(message):
 
 @bot.message_handler(regexp="[\d]+[а-яА-Я]")
 def handle_test(message):
-    print(message.text)
+    chat_id = str(message.chat.id)
+    print("CHAT ID = " + chat_id)
     global day
+    global g_school_name
     #if message.chat.type == 'group' and day != 'tomorrow':
         #text = message.text.split()[1]
     #else:
     text = message.text
+    print(text)
     if message.content_type == 'text':
-        if class_checker(text) != None:
+        if class_checker(text, chat_id ) != None:
             if day != 'tomorrow':
-                print('today ' + text)
-                bot.send_message(message.chat.id,Make_a_message(class_checker(text)))
+                print('today ' + ' ' + text + ' ' + g_school_name)
+                bot.send_message(message.chat.id,Make_a_message(class_checker(text, chat_id)))
             else:
                 global day
-                bot.send_message(message.chat.id,Make_a_message(class_checker(text),day))
-                print('Завтра ' + text )
+                bot.send_message(message.chat.id,Make_a_message(class_checker(text, chat_id),day))
+                print('Завтра ' + ' ' + text + ' ' + g_school_name)
         else:
             bot.send_message(message.chat.id,'В нашей школе нет такого класса')
+            sticker_number = random.randint(1,10)
+            sti = open('stickers/%s.webp' % str(sticker_number), 'rb')
+            bot.send_sticker(message.chat.id, sti)
     day = ''
 
 
-@bot.message_handler(func=lambda message: True)
+'''@bot.message_handler(func=lambda message: True)
 def handle_no_class(message):
     #print(message.text)
     bot.send_message(message.chat.id,'В нашей школе нет такого класса')
     sticker_number = random.randint(1,10)
     sti = open('stickers/%s.webp' % str(sticker_number), 'rb')
     bot.send_sticker(message.chat.id, sti)
-    #bot.send_sticker(message.chat.id, "FILEID")
+    #bot.send_sticker(message.chat.id, "FILEID")'''
 
 
         #time.sleep(3)
 
-def class_checker(classname):
-    class_list = get_class_list()
+def class_checker(classname, chat_id):
+    school_id = db_check(chat_id)
+    print('school_id = ' + school_id)
+    class_list = get_class_list(school_id)
+    #print(class_list)
     for item in class_list:
         if item['classname'] == classname.lower():
             return item['classid']

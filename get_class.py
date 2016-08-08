@@ -1,8 +1,10 @@
 
 import requests
 import xml.etree.ElementTree  as ET
-def get_class_list():
-        r = requests.post('http://sgo.volganet.ru/lacc.asp?Function=GetClassListForSchool&SchoolID=1460')
+def get_class_list(school_id):
+        
+        r = requests.post('http://sgo.volganet.ru/lacc.asp?Function=GetClassListForSchool&SchoolID=%s' % school_id)
+        #print('in class_list')
         root = ET.fromstring(r.text)
         class_list = []
         for child in root[0]:
