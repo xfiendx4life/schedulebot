@@ -111,13 +111,16 @@ def handle_no_class(message):
 
 def class_checker(classname, chat_id):
     school_id = db_check(chat_id)
-    print('school_id = ' + school_id)
-    class_list = get_class_list(school_id)
-    #print(class_list)
-    for item in class_list:
-        if item['classname'] == classname.lower():
-            return item['classid']
-    return None
+    if school_id != None:
+        print('school_id = ' + school_id)
+        class_list = get_class_list(school_id)
+        #print(class_list)
+        for item in class_list:
+            if item['classname'] == classname.lower():
+                return item['classid']
+        return None
+    else:
+        return None
 
 if __name__ == '__main__':
     try:

@@ -33,7 +33,10 @@ def get_school_list(cityid):
     return school_list
 
 def get_school_id(city_name, school_name):
-    lst = get_school_list(get_city_id(city_name))
-    for item in lst:
-        if item['schoolname'].lower() == school_name.lower():
-            return item['schoolid']
+    try:
+        lst = get_school_list(get_city_id(city_name))
+        for item in lst:
+            if item['schoolname'].lower() == school_name.lower():
+                return item['schoolid']
+    except:
+        return None
