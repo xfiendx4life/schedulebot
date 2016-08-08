@@ -19,7 +19,10 @@ def db_update(chat_id, sc_id):
 def db_check(chat_id):
     conn = sqlite3.connect('schools.db')
     c = conn.cursor()
-    c.execute('SELECT school_id FROM schools WHERE chat_id = %s' % chat_id)
-    school_id = c.fetchone()[0]
-    return school_id
+    r = c.execute('SELECT school_id FROM schools WHERE chat_id = %s' % chat_id)
+    try:
+        school_id = r.fetchone()[0]
+        return school_id
+    except:
+        return None
     
