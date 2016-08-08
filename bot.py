@@ -55,10 +55,12 @@ def handle_city_school(message):
     g_school_name = message.text
     
     sc_id = get_school_id(city_name, school_name )
-    if sc_id != '':
-        bot.send_message(message.chat.id, 'Школа выбрана') 
-    db_update(message.chat.id, sc_id)
-    print("SCHOOL ID = " + sc_id)
+    if sc_id:
+        bot.send_message(message.chat.id, 'Школа выбрана')
+        db_update(message.chat.id, sc_id)
+        print("SCHOOL ID = " + sc_id)
+    else:
+        bot.send_message(message.chat.id, 'Школа не выбрана, корректно вводите данные')
     set_school = False
     
 @bot.message_handler(commands=['start'])
