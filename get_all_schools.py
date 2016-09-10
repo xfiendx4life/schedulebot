@@ -41,8 +41,8 @@ def get_school_id(city_name, school_name):
         possible_list = []
         for item in lst: #makes list if there's no name
             for word in school_name.lower().split():
-                if word in item['schoolname']:
-                    possible_list.append(item['schoolid'])
+                if word in item['schoolname'] and word != '№':
+                    possible_list.append(item['schoolname'])
         return possible_list
                         
                     

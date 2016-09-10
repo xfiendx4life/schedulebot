@@ -55,13 +55,25 @@ def handle_city_school(message):
     g_school_name = message.text
     
     sc_id = get_school_id(city_name, school_name )
-    if sc_id:
-        bot.send_message(message.chat.id, 'Школа выбрана')
+    if str(type(sc_id)) != "<class 'list'>" and sc_id != None:
+        markup = types.ReplyKeyboardHide(selective=False)
+        bot.send_message(message.chat.id, 'Школа выбрана', reply_markup = markup)
         db_update(message.chat.id, sc_id)
         print("SCHOOL ID = " + sc_id)
+        set_school = False
+    elif str(type(sc_id)) == "<class 'list'>":
+        markup = types.ReplyKeyboardMarkup(row_width = 1)
+        itembtn = 0
+        school_list = sc_id
+        for item in school_list:
+            sch = '%s/%s' % (city_name,item)
+            print(sch)
+            itembtn = types.KeyboardButton(sch)
+            markup.add(itembtn)
+        bot.send_message(message.chat.id,'Попробуйте один из следующих вариантов /set_school', reply_markup=markup)
     else:
         bot.send_message(message.chat.id, 'Школа не выбрана, корректно вводите данные')
-    set_school = False
+    
     
 @bot.message_handler(commands=['start'])
 def handle_start(message):
@@ -71,6 +83,7 @@ def handle_start(message):
 
 @bot.message_handler(regexp="[\d]+[а-яА-Я]")
 def handle_test(message):
+    markup = types.ReplyKeyboardHide(selective=False)
     chat_id = str(message.chat.id)
     print("CHAT ID = " + chat_id)
     global day
@@ -84,7 +97,7 @@ def handle_test(message):
         if class_checker(text, chat_id ) != None:
             if day != 'tomorrow':
                 print('today ' + ' ' + text + ' ' + g_school_name)
-                bot.send_message(message.chat.id,Make_a_message(class_checker(text, chat_id)))
+                bot.send_message(message.chat.id,Make_a_message(class_checker(text, chat_id)), reply_markup = markup)
             else:
                 global day
                 bot.send_message(message.chat.id,Make_a_message(class_checker(text, chat_id),day))
