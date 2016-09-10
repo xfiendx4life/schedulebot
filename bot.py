@@ -65,7 +65,7 @@ def handle_city_school(message):
     
 @bot.message_handler(commands=['start'])
 def handle_start(message):
-    bot.send_message(message.chat.id, 'Приветствую, введите класс для получения расписания')
+    bot.send_message(message.chat.id, 'Приветствую, выберите город и школу для получения расписания')
 
 
 
@@ -100,10 +100,20 @@ def handle_test(message):
 '''@bot.message_handler(func=lambda message: True)
 def handle_no_class(message):
     #print(message.text)
-    bot.send_message(message.chat.id,'В нашей школе нет такого класса')
-    sticker_number = random.randint(1,10)
-    sti = open('stickers/%s.webp' % str(sticker_number), 'rb')
-    bot.send_sticker(message.chat.id, sti)
+    text = message.text
+    try:
+        markup = types.ReplyKeyboardMarkup(row_width = 3)
+        itembtn = 0
+        school_list = get_school_list(get_city_id(text))
+        for item in school_list:
+            itembtn = types.KeyboardButton(item['schoolname'])
+            markup.add(itembtn)
+    except:
+        print('markup error')
+    bot.send_message(message.chat.id,'keyboard test', reply_markup=markup)
+    #sticker_number = random.randint(1,10)
+    #sti = open('stickers/%s.webp' % str(sticker_number), 'rb')
+    #bot.send_sticker(message.chat.id, sti)
     #bot.send_sticker(message.chat.id, "FILEID")'''
 
 
