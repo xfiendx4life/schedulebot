@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-token = '194629688:AAEhB9Wl6k0XHt5D3IjbjfTPdPovaOMD38Q'
+token = '194629688:AAHo9XcOSj-hw5n3PtfUOIVQgz8ID5i-gbg'
 HOST     = '' # Same FQDN used when generating SSL Cert
 PORT     = 8443
 CERT     = 'path/to/ssl/server.crt'
