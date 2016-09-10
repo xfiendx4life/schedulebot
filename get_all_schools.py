@@ -38,5 +38,13 @@ def get_school_id(city_name, school_name):
         for item in lst:
             if item['schoolname'].lower() == school_name.lower():
                 return item['schoolid']
+        possible_list = []
+        for item in lst: #makes list if there's no name
+            for word in school_name.lower().split():
+                if word in item['schoolname']:
+                    possible_list.append(item['schoolid'])
+        return possible_list
+                        
+                    
     except:
         return None
