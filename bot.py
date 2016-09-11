@@ -83,31 +83,34 @@ def handle_start(message):
 
 @bot.message_handler(regexp="[\d]+[а-яА-Я]")
 def handle_test(message):
-    markup = types.ReplyKeyboardHide(selective=False)
-    chat_id = str(message.chat.id)
-    print("CHAT ID = " + chat_id)
-    global day
-    global g_school_name
+    try:
+        markup = types.ReplyKeyboardHide(selective=False)
+        chat_id = str(message.chat.id)
+        print("CHAT ID = " + chat_id)
+        global day
+        global g_school_name
     #if message.chat.type == 'group' and day != 'tomorrow':
         #text = message.text.split()[1]
     #else:
-    text = message.text
-    print(text)
-    if message.content_type == 'text':
-        if class_checker(text, chat_id ) != None:
-            if day != 'tomorrow':
-                print('today ' + ' ' + text + ' ' + g_school_name)
-                bot.send_message(message.chat.id,Make_a_message(class_checker(text, chat_id)), reply_markup = markup)
+        text = message.text
+        print(text)
+        if message.content_type == 'text':
+            if class_checker(text, chat_id ) != None:
+                if day != 'tomorrow':
+                    print('today ' + ' ' + text + ' ' + g_school_name)
+                    bot.send_message(message.chat.id,Make_a_message(class_checker(text, chat_id)), reply_markup = markup)
+                else:
+                    global day
+                    bot.send_message(message.chat.id,Make_a_message(class_checker(text, chat_id),day))
+                    print('Завтра ' + ' ' + text + ' ' + g_school_name)
             else:
-                global day
-                bot.send_message(message.chat.id,Make_a_message(class_checker(text, chat_id),day))
-                print('Завтра ' + ' ' + text + ' ' + g_school_name)
-        else:
-            bot.send_message(message.chat.id,'В нашей школе нет такого класса')
-            sticker_number = random.randint(1,10)
-            sti = open('stickers/%s.webp' % str(sticker_number), 'rb')
-            bot.send_sticker(message.chat.id, sti)
-    day = ''
+                bot.send_message(message.chat.id,'В нашей школе нет такого класса')
+                sticker_number = random.randint(1,10)
+                sti = open('stickers/%s.webp' % str(sticker_number), 'rb')
+                bot.send_sticker(message.chat.id, sti)
+        day = ''
+    except:
+        bot.send_message(message.chat.id,"Сначала выберите школу используя /set_school")
 
 
 '''@bot.message_handler(func=lambda message: True)
