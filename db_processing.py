@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import sqlite3
 def create_db():
     conn = sqlite3.connect('schools.db')

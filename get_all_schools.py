@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #https://sgo.volganet.ru/lacc.asp?Function=GetCityList2&StateID=34
 #https://sgo.volganet.ru/lacc.asp?Function=GetSchools&city=216
 import requests

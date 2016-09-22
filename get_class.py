@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 import requests
 import xml.etree.ElementTree  as ET
 def get_class_list(school_id):
