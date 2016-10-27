@@ -81,7 +81,7 @@ def handle_start(message):
 
 
 
-@bot.message_handler(regexp="[\d]+[а-яА-Я]")
+@bot.message_handler(regexp="[\d]+[а-яА-Я]*")
 def handle_test(message):
     try:
         markup = types.ReplyKeyboardHide(selective=False)
