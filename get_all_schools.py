@@ -3,9 +3,24 @@
 #https://sgo.volganet.ru/lacc.asp?Function=GetSchools&city=216
 import requests
 import xml.etree.ElementTree  as ET
+import time
+import sys
+
+def url_request(url):
+    x = 0
+    f = False
+    while not f:
+        try:
+            response = requests.post(url)
+            f = True
+        except :
+            time.sleep(x)
+            print(sys.exc_info()[0])
+            x += 1
+    return response
 
 def get_city_list():
-    r = requests.post('https://sgo.volganet.ru/lacc.asp?Function=GetCityList2&StateID=34')
+    r = url_request('https://sgo.volganet.ru/lacc.asp?Function=GetCityList2&StateID=34')
     #r.encoding = 'utf-8'
     root = ET.fromstring(r.text)
     city_list = []
@@ -23,7 +38,7 @@ def get_city_id(name):
             return item['cityid']
 
 def get_school_list(cityid):
-    r = requests.post('https://sgo.volganet.ru/lacc.asp?Function=GetSchools&city=%s' % cityid)
+    r = url_request('https://sgo.volganet.ru/lacc.asp?Function=GetSchools&city=%s' % cityid)
     root = ET.fromstring(r.text)
     school_list = []
     for child in root[0]:

@@ -3,8 +3,23 @@ import requests
 import xml.etree.ElementTree  as ET
 import datetime
 import sys
+import time
 
 cache = {}
+
+def url_request(url,payload=None):
+        x = 0
+        f = False
+        while not f:
+                try:
+                        response = requests.post(url, payload)
+                        f = True
+                except :
+                        time.sleep(x)
+                        print(sys.exc_info()[0])
+                        x += 1
+        return response
+
 
 def set_dates(*day):
     now  = datetime.date.today()
@@ -76,6 +91,7 @@ def check_weekday(*day):
             
 def Make_a_message(ClassID, *date):
     #day = get_schedule_for_class(ClassID, *day)
+    print('here')
     try:
         check_and_clear()
         day = check_cache(ClassID, *date)
