@@ -150,7 +150,8 @@ def class_checker(classname, chat_id):
 
 if __name__ == '__main__':
     try:
+        raise
         bot.polling(none_stop=True)
-    except:
-        os.startfile('bot.py')
-        print("Here's an ERROR")
+    except Exception as e:
+        bot.send_message('43037893', 'Houston we have problems: ' + str(e))
+        print(str(e))
