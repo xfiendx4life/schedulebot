@@ -149,9 +149,15 @@ def class_checker(classname, chat_id):
         return None
 
 if __name__ == '__main__':
-    try:
-        raise
-        bot.polling(none_stop=True)
-    except Exception as e:
-        bot.send_message('43037893', 'Houston we have problems: ' + str(e))
-        print(str(e))
+    timer = 0
+    flag = True
+    while True:
+        try:
+            time.sleep(timer)
+            bot.polling(none_stop=True)
+        except Exception as e:
+            if flag:
+                bot.send_message('43037893', 'Houston we have problems: ' + str(e))
+                flag = False
+            #print(str(e))
+            timer += 1
